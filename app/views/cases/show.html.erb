@@ -40,7 +40,7 @@
                 <div class="span5">
                   <h1 align="center"><b><%=@case.title%></b></h1>
                   <h5 align="center"><i class="icon icon-heart"></i> <%=@case.likers.count%> Likers
-                    <i class="icon  icon-shopping-cart"></i> <%=@case.loans.count%> Doners</h5>
+                    <i class="icon  icon-shopping-cart"></i> <%=@case.loans.active.count%> Doners</h5>
 
                     <hr>
                     <h3 align="center"></i> Loan: <%=@case.total_money%> LE</h3>
@@ -89,7 +89,7 @@
             <div class="tabbable"> <!-- Only required for left/right tabs -->
               <ul class="nav nav-tabs" >
                 <li class="active"><a href="#payment" data-toggle="tab">Payment Schedule</a></li>
-                <li><a href="#doners" data-toggle="tab">Doners <%= @case.loans.count%></a></li>
+                <li><a href="#doners" data-toggle="tab">Doners <%= @case.loans.active.count%></a></li>
               </ul>
               <div class="tab-content">
                 <div class="tab-pane active" id="payment">
