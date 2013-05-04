@@ -1,0 +1,161 @@
+<% content_for :title do %>
+  <title>Poor People Bank - Cases</title>
+<% end %>
+<div class="row">
+  <div class="span12">
+    <% if @admin_case.errors.any? %>
+        <div class="alert alert-block">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <p><h4><%= pluralize(@admin_case.errors.count, "error") %> prohibited this Case from being Created.</h4></p>
+            <ul>
+            <% @admin_case.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+            </ul>
+        </div>
+    <% end %>
+
+    <% if(@admin_cases == nil)
+      @admin_cases = Case.active
+    end %>
+
+    <h3 align="center">Cases</h3>
+    <ul class="nav nav-tabs">
+      <li class="active"><a>All Cases</a></li>
+      <li><%= link_to 'Suspend Cases', suspended_admin_cases_path%></li>
+    </ul>
+
+    <!-- Button to trigger modal -->
+    <a href="#myModal" role="button" class="btn pull-right" data-toggle="modal"><i class="icon icon-plus"></i>Create New</a>
+     
+    <!-- Modal -->
+    <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top: -5%;">
+      <div class="modal-header">
+
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Create New Case</h3>
+
+      </div>ـ
+      <div class="modal-body">
+
+      <%= form_for [:admin, @admin_case] do |f| %>
+        Title:
+      <br>
+        <%= f.text_field :title, :placeholder=>"Title"%>
+      <br>
+        Total Loan: 
+      <br>
+        <%= f.text_field :total_money, :placeholder=>"Total Loan" %>
+      <br>
+        Borrowers:
+      <br>
+        <%= f.collection_select :owner_ids, Borrower.order_by(:name.asc), :id, :name,{},{multiple: true} %>
+      <br>
+      <h4>Project Full Address</h4>
+        Governorate:
+      <br>
+        <%= f.text_field :governorate,:placeholder=>"Governerate"%>
+      <br>
+        Destrict:
+      <br>
+        <%= f.text_field :subdivision, :placeholder=>"Destrict"%>
+      <br>
+        More Address Details:
+      <br>
+        <%= f.text_field :address, :placeholder=>"Address"%>
+      <br>
+      <br>
+        Type:
+      <br>
+        <%= f.text_field :type, :placeholder=>"Type"%>
+      <br>
+        Description:
+      <br>
+        <%= f.text_area :description, :placeholder=>"Description", :rows=>'4'  %>
+      <br>
+        Reason:
+      <br>
+        <%= f.text_field :reason, :placeholder=>"Reason"%>
+      <br>
+        Starting Date:
+      <br>
+        <%= f.text_field :starting_date, :class => 'datepicker'%>
+      <br>
+        Experienced Borrowers(In General):
+      <br>
+        <%= f.radio_button(:experienced_owner, :true) %>Yes
+        |
+        <%= f.radio_button(:experienced_owner, :false) %>No
+      <br>
+        Number of Installments Months:
+      <br>
+        <%= f.text_field :inst_months, :placeholder=>"# Installments Months"%>
+      <br>
+      </div>
+      <div class="modal-footer">
+
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        <%= f.submit "Create",:class=>"btn btn-primary" %>
+
+      </div>
+      <% end %>
+    </div>
+<% if @admin_cases.size > 0 %>
+    <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Project</th>
+            <th>Borrowers</th>
+            <th>Type</th>
+            <th># Loan</th>
+            <th>Collected %</th>
+            <th># Loans</th>
+            <th># Likers</th>
+            <th>Starting Date</th>
+            <th>Experienced Borrower</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+            <% @admin_cases.each do |cas| %>
+              <tr>
+                <td><%= link_to cas.title, admin_case_path(cas)%></td>
+                <td>
+                  <% cas.owners.each do |owner| %>
+                    <%="#{owner.name}, "%>
+                  <% end %>
+                </td>
+                <td><%=cas.type%></td>
+                <td><%=cas.total_money%></td>
+                <td><%=cas.collected_perc%> %</td>
+                <td><%=cas.loans.count%></td>
+                <td><%=cas.likers.count%></td>
+                <td><%=cas.starting_date.to_date%></td>
+                <td><%=cas.experienced_owner%></td>
+                <td>
+                  <button class="btn" onclick= <%="showhide('#{cas.id.to_s}')"%> > Show/Hide</button>
+                  <%= link_to 'Suspend', [:admin,cas],:class=>"btn", method: :delete, data: { confirm: 'Are you sure?' } %>
+                </td>
+              </tr>
+
+              <tr colspan="12" id=<%="#{cas.id.to_s}"%> style="display:none;" class="collabsing">
+                <td colspan="12">
+                    <h4>Address</h4>
+                    <p><%="#{cas.address}, #{cas.subdivision}, #{cas.governorate}."%></p>
+                    <h4>Description</h4>
+                    <p><%=cas.description%></p>
+                    <h4>Reason</h4>
+                    <p><%=cas.reason%></p>
+                </td>
+              </tr>
+            <% end %>
+        </tbody>
+    </table>
+  </div>
+  <% else %>
+    <div class="well">
+      <h3>There are no Cases Yet..</h3>
+    </div>
+  <% end %>
+</div>
+

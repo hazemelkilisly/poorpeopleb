@@ -1,0 +1,44 @@
+<div class="row">
+    <div class="span5"><h2><span>Start using <img src="/images/logo.png" style="margin-bottom:13px;height:300px;"></span></h2></div>
+
+    <div class="span5" style="padding-top:30px;">
+        <h4>Create an account if you are new here:</h4>
+        <br>
+<div>
+<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :class=>'form-horizontal') do |f| %>
+  <%= devise_error_messages! %>
+	<hr>
+    <div><%= f.label :name %>
+    <%= f.text_field :name, :class => "input-xlarge"%></div>
+    <div><%= f.label :email %>
+    <%= f.email_field :email, :autofocus => true, :class => "input-xlarge" %></div>
+    <div><%= f.label :password %>
+    <%= f.password_field :password, :class => "input-xlarge" %></div>
+    <div><%= f.label :password_confirmation %>
+    <%= f.password_field :password_confirmation, :class => "input-xlarge" %></div>
+    <div> <%= f.label :location %>
+    <%= f.text_field :location, :class => "input-xlarge" %></div>
+    <div><%= f.label :phone %>
+    <%= f.text_field :phone, :class => "input-xlarge" %></div>
+    <h5>Are you representing an Entity (NGO, Company, etc..):</h5>
+    <%= f.radio_button(:entity, :true) %>Yes <%= f.radio_button(:entity, :false) %>No
+    <br><br>
+    <div><%= f.submit "Create Account" ,:class=>"btn"%></div>
+
+<%end%>
+        <hr>
+<!--         <strong>Or create an account with your social profiles:</strong><br>
+        <a href="http://wbpreview.com/previews/WB06SM719/login.html#" class="btn btn-facebook"><i class="icon icon-facebook"></i> Facebook</a> 
+        <a href="http://wbpreview.com/previews/WB06SM719/login.html#" class="btn btn-twitter"><i class="icon icon-twitter"></i> Twitter</a>
+        <hr> -->
+        <%= render "devise/shared/links" %>
+</div>
+
+    </div><!--/span5-->
+</div><!--/row-->
+
+
+
+
+
+

@@ -1,0 +1,55 @@
+<% content_for :title do %>
+  <title>Poor People Bank - Suspended Organizations</title>
+<% end %>
+<div class="row">
+  <div class="span12">
+
+  <h3 align="center">Organizations</h3>
+  <ul class="nav nav-tabs">
+    <li><%= link_to 'All Organizations', admin_organizations_path%></li>
+    <li class="active"><a>Suspended Organizations</a></li>
+  </ul>
+
+<% if @admin_organizations.size > 0 %>
+    <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Phone</th>
+            <th>Website</th>
+            <th># Admins</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+            <% @admin_organizations.each do |org| %>
+              <tr>
+                <td><%=org.title%></td>
+                <td><%=org.phone%></td>
+                <td><%=org.website%></td>
+                <td><%=org.admins.count%></td>
+                <td>
+                  <button class="btn" onclick= <%="showhide('#{org.id.to_s}')"%> > Show/Hide</button>
+                  <%= link_to 'Unsuspend', desuspend_admin_organization_path(org),:class=>"btn", method: :post, data: { confirm: 'Are you sure?' } %>
+                </td>
+              </tr>
+
+              <tr colspan="12" id=<%="#{org.id.to_s}"%> style="display:none;" class="collabsing">
+                <td colspan="12">
+                    <h4>Address</h4>
+                    <p><%="#{org.address}, #{org.destrict}, #{org.city}."%></p>
+                    <h4>Description</h4>
+                    <p><%=org.description%></p>
+                </td>
+              </tr>
+            <% end %>
+        </tbody>
+    </table>
+  </div>
+  <% else %>
+    <div class="well">
+      <h3>There are no Suspended Organizations..</h3>
+    </div>
+  <% end %>
+</div>
+

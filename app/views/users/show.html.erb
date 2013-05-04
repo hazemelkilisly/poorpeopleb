@@ -1,0 +1,153 @@
+<% content_for :title do %>
+  <title>Poor People Bank - <%=@user.name%></title>
+<% end %>
+      <div class="well">
+        <div class="members-wraper">
+          <div class="member-holder active">
+            <img class="img-circle" style="width:265px;height:265px;" src="/./images/avatar.png" alt="member">
+            <div class="member-info-wraper">
+              <header class="pull-left">
+                <h3><%= @user.name %>
+                  <% if @user.entity %>
+                    <b>(entity)</b>
+                  <% end %>
+                </h3>
+              </header>
+
+              <div class="clearfix"></div>
+
+              <div class="span3">
+                <div class="span3"><h4 class="section-header" style="margin-bottom:-1px;"><i class="icon-shopping-cart icon-large"></i>Lended <b><%= @user.loans.count %></b> Case/s</h4></div>
+                <div class="span3"><h4 class="section-header" style="margin-bottom:-1px;"><i class="icon-heart icon-large"></i>Likes <b><%= @user.liked_cases.count %></b> Case/s</h4></div>
+
+
+              </div>
+              <div class="span3">
+                <% if @user.show_phone %>
+                  <div class="span3"><h4 class="section-header" style="margin-bottom:-1px;"><i class="icon-comment icon-large"></i> <%= @user.phone %></h4></div>
+                <% end %>
+                <% if @user.show_location %>
+                  <div class="span3"><h4 class="section-header" style="margin-bottom:-1px;"><i class="icon-map-marker icon-large"></i> <%= @user.location %></h4></div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <hr>
+
+
+
+
+
+
+<div class="row">
+<div class="span12">
+<% @loans = @user.loans.in_columns(4) %>
+<% @likes = @user.liked_cases.in_columns(4) %>
+
+<div class="tabbable"> <!-- Only required for left/right tabs -->
+<ul class="nav nav-pills" style="margin-left:15px;">
+<li class="active"><a href="#loans" data-toggle="tab">Loans <%= @user.loans.count%></a></li>
+<li><a href="#likes" data-toggle="tab">Likes <%= @user.loans.count%></a></li>
+</ul>
+<div class="tab-content">
+
+<div class="tab-pane active" id="loans">
+
+
+<%if @loans.size > 0 && @loans[0].size > 0 %>
+<div class="span3" style="margin-left:13px;">
+<ul class="thumbnails">
+
+<% @loans[0].each do |pro| %>
+  <%= render "shared/singlecase", :pro => pro.case, :shareperc => pro.quantity %>
+<% end %>
+</ul>
+</div>
+<div class="span3" style="margin-left:13px;">
+<ul class="thumbnails">
+
+<% @loans[1].each do |pro| %>
+  <%= render "shared/singlecase", :pro => pro.case, :shareperc => pro.quantity %>
+<% end %>
+</ul>
+</div>
+<div class="span3" style="margin-left:13px;">
+<ul class="thumbnails">
+
+<% @loans[2].each do |pro| %>
+  <%= render "shared/singlecase", :pro => pro.case, :shareperc => pro.quantity %>
+<% end %>
+</ul>
+</div>
+<div class="span3" style="margin-left:13px;">
+<ul class="thumbnails">
+
+<% @loans[3].each do |pro| %>
+  <%= render "shared/singlecase", :pro => pro.case, :shareperc => pro.quantity %>
+<% end %>
+</ul>
+</div>
+
+<%else%>
+    <div class = "well" %>
+        <p>You didn't lend any Cases Yet..</p>
+    </div>
+<%end%>
+
+
+</div>
+
+
+<div class="tab-pane" id="likes"> 
+
+<%if @likes.size > 0 && @likes[0].size > 0 %>
+<div class="span3" style="margin-left:13px;">
+<ul class="thumbnails">
+
+<% @likes[0].each do |pro| %>
+  <%= render "shared/singlecase", :pro => pro, :shareperc => nil %>
+<% end %>
+</ul>
+</div>
+<div class="span3" style="margin-left:13px;">
+<ul class="thumbnails">
+
+<% @likes[1].each do |pro| %>
+  <%= render "shared/singlecase", :pro => pro, :shareperc => nil %>
+<% end %>
+</ul>
+</div>
+<div class="span3" style="margin-left:13px;">
+<ul class="thumbnails">
+
+<% @likes[2].each do |pro| %>
+  <%= render "shared/singlecase", :pro => pro, :shareperc => nil %>
+<% end %>
+</ul>
+</div>
+<div class="span3" style="margin-left:13px;">
+<ul class="thumbnails">
+
+<% @likes[3].each do |pro| %>
+  <%= render "shared/singlecase", :pro => pro, :shareperc => nil %>
+<% end %>
+</ul>
+</div>
+
+<%else%>
+    <div class = "well" %>
+        <p>You didn't like any Cases Yet..</p>
+    </div>
+<%end%>
+
+</div>
+
+</div>
+</div> <!-- end tabbable -->
+
+</div>
+</div>
+

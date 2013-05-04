@@ -1,0 +1,53 @@
+<% content_for :title do %>
+  <title>Poor People Bank - Loans Pending Collection</title>
+<% end %>
+
+<div class="row">
+  <div class="span12">
+  <h2><span>Pending Loans to be Collected</span></h2>
+
+<% if @admin_loans.size > 0 %>
+    <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Quantity</th>
+            <th>Donation/Loan</th>
+            <th>Owner</th>
+            <th>To Case</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @admin_loans.each do |loan| %>
+            <tr>
+              <td><%=loan.quantity%></td>
+              <% if loan.donation %>
+                <td>Donation</td>
+              <% else %>
+                <td>Pay-Back Loan</td>
+              <% end %>
+              <td><%=loan.user.name%></td>
+              <td><%=loan.case.title%></td>
+              <td>
+                  <button class="btn" onclick= <%="showhide('#{loan.id.to_s}')"%> > Show/Hide</button>
+                <%= link_to 'Collected', [:admin,loan],:class=>"btn", method: :delete, data: { confirm: 'Are you sure?' } %>
+              </td>
+            </tr>
+            <tr colspan="12" id=<%="#{loan.id.to_s}"%> style="display:none;" class="collabsing">
+              <td colspan="12">
+                  <h4>Address</h4>
+                  <p><%="#{loan.address}, #{loan.destrict}, #{loan.city}."%></p>
+                  <h4>Comments</h4>
+                  <p><%=loan.comments%></p>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+    </table>
+  </div>
+  <% else %>
+    <div class="well">
+      <h3>There are no loans Yet..</h3>
+    </div>
+  <% end %>
+</div>

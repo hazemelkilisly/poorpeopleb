@@ -1,0 +1,22 @@
+<h1>Editing admin_case</h1>
+
+<%= form_for(@admin_case) do |f| %>
+  <% if @admin_case.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@admin_case.errors.count, "error") %> prohibited this admin_case from being saved:</h2>
+
+      <ul>
+      <% @admin_case.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
+<%= link_to 'Show', @admin_case %> |
+<%= link_to 'Back', admin_cases_path %>

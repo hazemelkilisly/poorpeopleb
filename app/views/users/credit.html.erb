@@ -1,0 +1,44 @@
+<% content_for :title do %>
+  <title>Poor People Bank - My Credit</title>
+<% end %>
+<div class="span12">
+<div class="well">
+<h3 align="center"><i class="icon icon-money"></i>  Credit On System <%= @user.paybacks.online.sum(:quantity) %> LE</h3>
+<% if @user.paybacks.count > 0 %>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Quantity</th>
+              <th>From Total</th>
+              <th>From Case</th>
+              <th>Payment Date</th>
+              <th>Days Difference from Due Date (Late)</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <% @user.paybacks.order_by(:created_at.desc).each do |pay| %>
+              <tr>
+                <th><%= pay.quantity %></th>
+                <th><%= pay.from_loan.quantity %></th>
+                <th><%= link_to pay.from_loan.case.title, case_path(pay.from_loan.case) %></th>
+                <td><%= pay.from_installment.payment_date.strftime("%B %e, %Y")%></td>
+                <td><%= pay.from_installment.days_diff%></td>
+                <% if pay.withdrawn %>
+	        		<th>Already Withdrawn</th>
+	        	<% else %>
+	        		<td><%= link_to "Withdraw", withdraw_user_path(pay), method: :post, :class=>'btn' %></td>
+	        	<% end %>
+              </tr>
+            <% end %>
+
+          </tbody>
+        </table>
+<% else %>
+    <h4>You don't have any past paybacks!</h4>
+<% end %>
+
+
+</div>
+</div>

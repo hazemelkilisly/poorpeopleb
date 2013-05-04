@@ -1,0 +1,67 @@
+<% content_for :title do %>
+  <title>Poor People Bank - My Settings</title>
+<% end %>
+<div class="row">
+<div class="span5">
+<div class="well">
+
+<% if @user.errors.any? %>
+<div id="error_explanation">
+<h2><%= pluralize(@user.errors.count, "error") %> prohibited these changes from being Saved:</h2>
+<ul>
+<% @user.errors.full_messages.each do |msg| %>
+<li><%= msg %></li>
+<% end %>
+</ul>
+</div>
+<% end %>
+
+<div class="tabbable"> <!-- Only required for left/right tabs -->
+<ul class="nav nav-tabs" >
+<li class="active"><a href="#info" data-toggle="tab">Update Info</a></li>
+<li><a href="#password" data-toggle="tab">Change Password</a></li>
+</ul>
+<div class="tab-content">
+<div class="tab-pane active" id="info">
+<h3>Settings</h3>
+<%= form_for(@user, :url => update_settings_users_path, :html => { :method => "post" }) do |f| %>
+<br>
+Name
+<br>
+<%= f.text_field :name, :placeholder=>"Name"%>
+<br>
+Phone
+<br>
+<%= f.text_field :phone, :placeholder=>"Phone"%>
+<br>
+Location
+<br>
+<%= f.text_field :location, :placeholder=>"Location"%>
+<br>
+<h5>Would You like your loans to be shown to other people?</h5>
+<br>
+<%=f.radio_button(:default_private_loaning, :true)%>Yes | <%=f.radio_button(:default_private_loaning, :false)%>No
+<br>
+<br>
+<%= f.submit "Save", :class=>"btn" %>
+<%end%>
+</div>
+<div class="tab-pane" id="password"> 
+<h4>Change Password:</h4>
+<%= form_for(@user, :url => update_password_users_path, :html => { :method => "post" }) do |f| %>
+Password:
+<br>
+<%= f.password_field :password, :autocomplete => "off"  %>
+<br>
+Confirm Password:
+<br>
+<%= f.password_field :password_confirmation %>
+<br>
+<%= f.submit "Change Password", :class=>"btn" %>
+<%end%>
+</div>
+</div>
+</div> <!-- end tabbable -->
+</div>
+</div>
+</div><!--/row-->

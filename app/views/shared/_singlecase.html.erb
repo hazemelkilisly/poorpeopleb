@@ -1,0 +1,53 @@
+<li class="span3">
+<div class="wrapper">
+<div class="thumbnail">
+	<div style="text-align:center;">
+<a href=<%="/./cases/#{pro.id}"%> ><img src="/images/product.png" alt="" style="max-height:150px;"></a>
+</div>
+	<h4>
+		<%=pro.title%>
+		<% if user_signed_in? %>
+		  <% if pro.likers.include?(current_user)%>
+			<%= link_to '<i class="icon icon-remove-sign"></i><i class="icon  icon-heart"></i>'.html_safe, unlike_case_path(pro), method: :post,:class=>'btn btn-mini' %>
+		  <% else %>
+			<%= link_to '</i><i class="icon  icon-heart"></i>'.html_safe, like_case_path(pro), method: :post,:class=>'btn btn-mini' %>
+		  <% end %>
+		<% elsif !admin_signed_in?%>
+			<%= link_to '</i><i class="icon  icon-heart"></i>'.html_safe, like_case_path(pro), method: :post,:class=>'btn btn-mini' %>
+		<% end %>
+
+		<% unless admin_signed_in?%>
+		<%= link_to '<i class="icon icon-shopping-cart"></i>'.html_safe, lend_case_path(pro),:class=>'btn btn-mini btn-primary' %>
+		<% end %>
+
+	</h4>
+  <h5>
+  	<b>
+  <%pro.owners.each do |owner| %>
+    <%=owner.name + ', '%>
+  <% end %>
+</b>
+</h5>
+	<hr>
+
+<h5><b><%= pro.collected_perc%>%</b> Raised
+<% unless admin_signed_in?%>
+<a href="http://www.facebook.com/sharer.php?http://poorpeoplebank.herokuapp.com/cases/#{pro.id}" target="_blank" class="btn btn-facebook pull-right"><i class="icon icon-facebook"></i> Share</a>
+<% end %>
+</h5>
+<div class="progress progress-striped">
+<div class="bar" style=<%="width:#{pro.collected_perc.to_s}%;"%>></div>
+</div>
+
+<h4 align="center"><i class="icon icon-money"></i>Total Loan: <b><%=pro.total_money%></b></h4>
+<% if shareperc %>
+	<h5 align="center">loaned: <%=shareperc%> LE</h5>
+<% elsif current_user %>
+	<% if pro.loans.active.where(:user=> current_user).count > 0 %>
+		<h5 align="center">You loaned: <%=pro.loans.active.where(:user=> current_user).sum(:quantity)%> LE</h5>
+	<% end %>
+<% end %>
+<p><%=pro.description[0..50]+'...'%><%= link_to 'Read on »', pro %></p>
+</div>
+</div>
+</li>

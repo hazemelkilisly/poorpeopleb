@@ -1,0 +1,126 @@
+<% content_for :title do %>
+  <title>Poor People Bank - Organizations</title>
+<% end %>
+<div class="row">
+  <div class="span12">
+    <% if @admin_organization.errors.any? %>
+        <div class="alert alert-block">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <p><h4><%= pluralize(@admin_organization.errors.count, "error") %> prohibited this Organization from being Created.</h4></p>
+            <ul>
+            <% @admin_organization.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+            </ul>
+        </div>
+    <% end %>
+
+    <%
+    if(@admin_organizations == nil)
+      @admin_organizations = Organization.active
+    end
+    %>
+
+    <h3 align="center">Organization</h3>
+    <ul class="nav nav-tabs">
+      <li class="active"><a>All Organizations</a></li>
+      <li><%= link_to 'Suspend Organizations', suspended_admin_organizations_path%></li>
+    </ul>
+
+
+    <!-- Button to trigger modal -->
+    <a href="#myModal" role="button" class="btn pull-right" data-toggle="modal"><i class="icon icon-plus"></i>Create New</a>
+     
+    <!-- Modal -->
+    <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top: -5%;">
+      <div class="modal-header">
+
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Create New Organization</h3>
+
+      </div>ـ
+      <div class="modal-body">
+
+      <%= form_for [:admin, @admin_organization] do |f| %>
+        Title:
+      <br>
+        <%= f.text_field :title, :placeholder=>"Title"%>
+      <br>
+        Description:
+      <br>
+        <%= f.text_area :description, :placeholder=>"Description", :rows=>'4'  %>
+      <br>
+        Phone:
+      <br>
+        <%= f.text_field :phone, :placeholder=>"Phone"%>
+      <br>
+        Website:
+      <br>
+        <%= f.text_field :website, :placeholder=>"Website"%>
+      <br>
+
+      <h4>Organization's HeadQuarter's Full Address</h4>
+        City:
+      <br>
+        <%= f.text_field :city,:placeholder=>"Governerate"%>
+      <br>
+        Destrict:
+      <br>
+        <%= f.text_field :destrict, :placeholder=>"Destrict"%>
+      <br>
+        More Address Details:
+      <br>
+        <%= f.text_field :address, :placeholder=>"Address"%>
+      <br>
+      </div>
+      <div class="modal-footer">
+
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        <%= f.submit "Create",:class=>"btn btn-primary" %>
+
+      </div>
+      <% end %>
+    </div>
+<% if @admin_organizations.size > 0 %>
+    <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Phone</th>
+            <th>Website</th>
+            <th># Admins</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+            <% @admin_organizations.each do |org| %>
+              <tr>
+                <td><%=org.title%></td>
+                <td><%=org.phone%></td>
+                <td><%=org.website%></td>
+                <td><%=org.admins.count%></td>
+                <td>
+                  <button class="btn" onclick= <%="showhide('#{org.id.to_s}')"%> > Show/Hide</button>
+                  <%= link_to 'Suspend', [:admin,org],:class=>"btn", method: :delete, data: { confirm: 'Are you sure?' } %>
+                </td>
+              </tr>
+
+              <tr colspan="12" id=<%="#{org.id.to_s}"%> style="display:none;" class="collabsing">
+                <td colspan="12">
+                    <h4>Address</h4>
+                    <p><%="#{org.address}, #{org.destrict}, #{org.city}."%></p>
+                    <h4>Description</h4>
+                    <p><%=org.description%></p>
+                </td>
+              </tr>
+            <% end %>
+        </tbody>
+    </table>
+  </div>
+  <% else %>
+    <div class="well">
+      <h3>There are no Organizations..</h3>
+    </div>
+  <% end %>
+</div>
+

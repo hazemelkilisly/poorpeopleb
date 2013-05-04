@@ -1,0 +1,216 @@
+<% content_for :title do %>
+  <title>Poor People Bank - <%=@case.title%></title>
+<% end %>
+
+      <div class="container">
+          <div class="wrapper">
+
+            <div class="well">
+              <div class="row">
+                <div class="span6">
+
+                <div id="myCarousel" class="carousel slide span5">
+                  <ol class="carousel-indicators">
+                    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#myCarousel" data-slide-to="1"></li>
+                    <li data-target="#myCarousel" data-slide-to="2"></li>
+                  </ol>
+                  <!-- Carousel items -->
+                  <div class="carousel-inner" style="background-image: url('/images/wild_oliva_dark.png'); border: 5px solid black;">
+
+                  <div class="active item span4" style="height:350px;">
+                 <img src="/images/avatar.png" alt="" style="display:block;margin:auto;">
+                  </div>
+
+                  <div class="item span4" style="height:350px;">
+                 <img src="/images/product.png" alt="" style="display:block;margin:auto;">
+                  </div>
+
+                  <div class="item span4" style="height:350px;">
+                 <img src="/images/product.png" alt="" style="display:block;margin:auto;">
+                  </div>
+
+                  </div>
+                  <!-- Carousel nav -->
+                  <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+                  <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+                </div>
+
+                </div>
+                <div class="span5">
+                  <h1 align="center"><b><%=@case.title%></b></h1>
+                  <h5 align="center"><i class="icon icon-heart"></i> <%=@case.likers.count%> Likers
+                    <i class="icon  icon-shopping-cart"></i> <%=@case.loans.count%> Doners</h5>
+
+                    <hr>
+                    <h3 align="center"></i> Loan: <%=@case.total_money%> LE</h3>
+                    <h4 align="center"><i class="icon icon-calendar"></i> <%=@case.inst_months%> Months Repayment + <%= @case.postponed_insts%> Postponed Installments</h4>
+
+                    <div class="form-inline"><h4 align="center"><b><%=@case.collected_perc%>%</b> Raised</h4></div>
+                    <div class="progress progress-striped">
+                      <div class="bar" style=<%="width:#{@case.collected_perc.to_s}%;"%>></div>
+                    </div>
+                    <hr>
+                    <p><%= @case.description%></p>
+                    <hr>
+                    <% if user_signed_in? %>
+                      <% if @case.likers.include?(current_user)%>
+                        <%= link_to 'unLike', unlike_case_path(@case), method: :post,:class=>'btn'%>
+                      <% else %>
+                        <%= link_to 'Like', like_case_path(@case), method: :post,:class=>'btn'%>
+                      <% end %>
+                    <% else %>
+                      <%= link_to 'Like', like_case_path(@case), method: :post,:class=>'btn'%>
+                    <% end %>
+
+                    <% if user_signed_in? %>
+                    <!-- Button to trigger modal -->
+                      <a href="#myModal" role="button" class="btn btn-primary" data-toggle="modal"> Donate</a>
+                    <% else %>
+                      <%= link_to 'Donate', lend_case_path(@case) ,:class=>'btn btn-primary'%>
+                    <% end %>
+                    <a href=<%="http://www.facebook.com/sharer.php?http://poorpeoplebank.herokuapp.com/cases/#{@case.id}"%> class="btn btn-facebook pull-right" target="_blank"><i class="icon icon-facebook"></i> Share</a>
+                    <hr>
+                    <h4>Loan By: 
+                      <%@case.owners.each do |owner| %>
+                        <a href="#"><%=owner.name%></a>
+                      <% end %>
+                    </h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="container">
+            <div class="well">
+              <div class="row">
+           <div class="span9">
+            <div class="tabbable"> <!-- Only required for left/right tabs -->
+              <ul class="nav nav-tabs" >
+                <li class="active"><a href="#payment" data-toggle="tab">Payment Schedule</a></li>
+                <li><a href="#doners" data-toggle="tab">Doners <%= @case.loans.count%></a></li>
+              </ul>
+              <div class="tab-content">
+                <div class="tab-pane active" id="payment">
+                  <h3>Total Installments: <%= @case.total_insts %></h3>
+                  <h3>Remaining Installments: <%= @case.remaining_insts %></h3>
+                  <div id="schedule">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th> # </th>
+                          <th>Due Date</th>
+                          <th>Repayment</th>
+                          <th>Status</th>
+                          <th>Paid At</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+
+                        <% for i in 1..@case.total_insts %>
+                          <tr>
+                            <th><%= "##{i}" %></th>
+                            <td><%=@case.inst_timing(i).strftime("%B %e, %Y")%></td>
+                            <td><%=@case.inst_val(i)%></td>
+                            <% sts = @case.inst_status(i) %>
+                            <% if sts == 'not_due' %>
+                              <td colspan="2">Not Due Yet</td>
+<!--                               <td>Not Due Yet</td>
+ -->                            <% elsif sts == 'due' %>
+                              <td colspan="2">Due But Not Paid Yet</td>
+<!--                               <td>Due But Not Paid Yet</td>
+ -->                           <% else %>
+                              <td>Paid</td>
+                              <td><%=sts%></td>
+                            <% end %>
+                          </tr>
+                        <% end %>
+
+                      </tbody>
+                    </table>
+
+                  </div>
+                </div>
+                
+
+                <div class="tab-pane" id="doners"> 
+                <% if @case.loans.active.count > 0 %>
+                  <% @case.loans.active.each do |loan| %>
+                      <div class="span2" style="margin-left:7px;">
+                        <ul class="thumbnails">
+                          <li class="span2">
+                            <div class="wrapper">
+                              <div class="thumbnail">
+                                <a href=""><img src="/images/avatar.png" alt=""></a>
+                                <div><h5><%= link_to loan.user.name, user_path(loan.user)%></h5></div>
+                                <h5><i class="icon icon-money"></i>Donated: <b><%=loan.quantity%></b>LE</h5>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                  <%end%>
+                  <% else %>
+                  <div class="well">
+                    <h3> There are Currently No Doners to this Case!</h3>
+                  </div>
+                  <% end %>
+              </div>
+
+            </div>
+            </div> <!-- end tabbable -->
+        </div>
+</div></div></div>
+
+
+     
+    <!-- Modal -->
+    <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top: -5%;">
+      <div class="modal-header">
+
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Lend Case <%=@case.title%>:</h3>
+
+      </div>ـ
+      <div class="modal-body">
+      <%= form_for(:loan, :url => lender_case_path(@case), :html => { :method => "post" }) do |f| %>
+        Quantity:
+        <br>
+        <%= f.text_field :quantity,:class=>"input-xlarge", :placeholder=>"Quantity"%>
+        <br>
+        <h3>Address:</h3>
+        <br>
+        City:
+        <br>
+        <%= f.text_field :city,:class=>"input-xlarge", :placeholder=>"City"%>
+        <br>
+        Destrict:
+        <br>
+        <%= f.text_field :destrict,:class=>"input-xlarge", :placeholder=>"Destrict"%>
+        <br>
+        Address:
+        <br>
+        <%= f.text_field :address,:class=>"input-xlarge", :placeholder=>"Address"%>
+        <br>        
+        Comments:
+        <br>
+        <%= f.text_field :comments,:class=>"input-xlarge", :placeholder=>"Comments"%>
+        <br>
+        Type of Loan:
+        <br>
+          <%= f.radio_button(:donation, :true) %>Donation
+          |
+          <%= f.radio_button(:donation, :false) %>Repayable Loan
+        <br>
+      </div>
+      <div class="modal-footer">
+
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        <%= f.submit "Lend", :class=>"btn" %>
+
+      </div>
+      <% end %>
+    </div>
+
+

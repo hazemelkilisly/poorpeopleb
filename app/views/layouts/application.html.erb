@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <% if content_for?(:title) %>
+    <%= content_for(:title) %>
+  <% else %>
+    <title>Poor People Bank</title>
+  <% end %>
+
+<%= stylesheet_link_tag "application",:media => "all"  %>
+
+
+<%= javascript_include_tag "application" %>
+
+<%= csrf_meta_tag %>
+  </head>
+  <body>
+<div class="navbar navbar-inverse navbar-fixed-top">
+
+<% if admin_signed_in? || user_signed_in? %>
+
+<% if admin_signed_in? %>
+
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <i class="icon icon-reorder"></i> Menu
+        </a>
+        <a class="brand" href="/."><img src="/images/logo.png" style="height:30px;">Poor People Bank</a>
+
+        <div class="nav-collapse collapse">
+
+          <ul class="nav pull-right">
+            <li><%= link_to 'Organizations', admin_organizations_path%></li>
+            <li><%= link_to 'Admins', admin_admins_path%></li>
+            <li><%= link_to 'Borrowers', admin_borrowers_path%></li>
+            <li><%= link_to 'Cases', admin_cases_path%></li>
+            <li><%= link_to 'Pending Requests', admin_loans_path%></li>
+            <li><%= link_to 'Users', admin_users_path%></li>
+            <li class="dropdown">
+              <a href="" class="dropdown-toggle" data-toggle="dropdown"><img src="/images/avatar.png" style="width:40px;height:40px;margin-right:3px;margin-top:-7px;margin-bottom:-9px;"/><b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><%= link_to '<i class="icon-cog"></i>Settings'.html_safe, settings_admin_admins_path %></li>
+                <li class="divider"></li>
+                <li><%= link_to '<i class="icon-off"></i>Sign Out'.html_safe, destroy_admin_session_path, method: :DELETE %></li>
+              </ul>
+            </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    <div class="sub-navbar">
+      <div class="container">
+      </div>
+    </div>
+
+<% elsif user_signed_in? %>
+
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <i class="icon icon-reorder"></i> Menu
+        </a>
+        <a class="brand" href="/."><img src="/images/logo.png" style="height:30px;">Poor People Bank</a>
+
+        <div class="nav-collapse collapse">
+<!--           <ul class="nav">
+            <li class="dropdown">
+              <a href="" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-white icon-info-sign"></i> Notifications <span class="badge badge-info">4</span></b></a>
+              <ul class="dropdown-menu">
+                <li><a href=""><i class="icon-envelope-alt"></i> "Am Kamal" has just paid his monthly installment</a></li>
+                <li><a href=""><i class="icon-envelope-alt"></i> "Karim Ahmed" loan has just been completed</a></li>
+                <li class="divider"></li>
+                <li align="center"><a href="">See More</a></li>
+              </ul>
+            </li>
+          </ul> -->
+          <ul class="nav pull-right">
+            <li><%= link_to 'Start Lending', cases_path%></li>
+            <li class="dropdown">
+              <a href="" class="dropdown-toggle" data-toggle="dropdown"><img src="/images/avatar.png" style="width:40px;height:40px;margin-right:3px;margin-top:-7px;margin-bottom:-9px;"/><b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><%= link_to '<i class="icon-user"></i>Profile'.html_safe, user_path(current_user) %></li>
+                <li><%= link_to '<i class="icon-money"></i>My Credit'.html_safe, credit_users_path %></li>
+                <li><%= link_to '<i class="icon-cog"></i>Settings'.html_safe, settings_users_path %></li>
+                <li class="divider"></li>
+                <li><%= link_to '<i class="icon-off"></i>Sign Out'.html_safe, destroy_user_session_path, method: :DELETE %></li>
+              </ul>
+            </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    <div class="sub-navbar">
+      <div class="container">
+      </div>
+    </div>
+
+  <% end %>
+
+<%else%>
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <i class="icon icon-reorder"></i> Menu
+        </a>
+        <a class="brand" href="/."><img src="/images/logo.png" style="height:30px;">Poor People Bank</a>
+
+        <div class="nav-collapse collapse">
+          <ul class="nav pull-right">
+              <li><%= link_to 'All Cases', cases_path%></li>
+            </ul>
+        </div>
+
+      </div>
+    </div>
+    <div class="sub-navbar">
+      <div class="container">
+        <form class="form-inline" style="margin: 0 0 10px;">
+          <i class="icon icon-user"></i> Hello, Guest.
+          <%= link_to 'Sign up here »', new_user_registration_path,:class=>"btn btn-login" %>
+          <%= link_to 'Login here »', new_user_session_path,:class=>"btn btn-login" %>
+          </form>      
+      </div>
+    </div>
+
+<%end%>
+</div>
+
+  <div class="main">
+    <div class="container">
+
+        <% if flash[:notice] || flash[:alert] %>
+            <% if flash[:notice] %>
+              <div class="alert alert-success">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <p><%= flash[:notice] %></p>
+              </div>
+            <% end %>
+            <% if flash[:alert] %>
+              <div class="alert alert-block">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <p><%= flash[:alert] %></p>
+              </div>
+            <% end %>   
+        <% end %>
+
+      <%= yield %>
+    </div>
+  </div>
+
+</br>
+<footer class="navbar-fixed-bottom">
+  <div class="container">
+  </div>
+</footer>
+</body>
+</html>

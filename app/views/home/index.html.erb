@@ -1,0 +1,80 @@
+<% content_for :title do %>
+  <title>Poor People Bank - Home</title>
+<% end %>
+
+</br>
+
+<div class="row">
+
+
+<div id="myCarousel" class="carousel slide span6">
+  <ol class="carousel-indicators">
+    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+    <li data-target="#myCarousel" data-slide-to="1"></li>
+    <li data-target="#myCarousel" data-slide-to="2"></li>
+  </ol>
+  <!-- Carousel items -->
+  <div class="carousel-inner">
+
+  <div class="active item well span5" style="height:340px;">
+    <h3>Twitter Feeds #charity</h3>
+    <% if @twitter_feeds == nil %>
+      <p> There are no Twitter Feeds at the Moment..</p>
+    <% else %>
+      <% @twitter_feeds.each do |tweet| %>
+        <h5><b><%=tweet.author%>:</b></h5><p><%=tweet.title%>
+        </br>
+        <i>Tweeted At: <%=tweet.published.strftime("%B %e, %Y At %l:%M %p")%></i></p>
+        <hr>
+      <% end %> 
+    <% end %>
+  </div>
+
+
+
+  <div class="item well span5" style="height:340px;">
+    <h3>Most Given Cases</h3>
+    <% if @most_given_cases.count == 0 %>
+      <p> There are no Cases at the Moment..</p>
+    <% else %>
+      <% @most_given_cases.each do |cas| %>
+      <p>
+        <h5><%=link_to cas.title, cas%>:</h5>
+        <b><%=cas.collected_perc%>%</b> Raised <b>|</b> Loan: <b><%= cas.total_money%></b> LE <b>|</b> <b><%= cas.likers.count%></b> Likers <b>|</b> <b><%= cas.loans.count%></b>  Doners.
+        <br>
+      </p>
+      <% end %> 
+    <% end %>
+  </div>
+
+  <div class="item well span5" style="height:340px;">
+    <h3>The Newest Added Cases</h3>
+    <% if @newest_cases.count == 0 %>
+      <p> There are no Cases at the Moment..</p>
+    <% else %>
+      <% @newest_cases.each do |cas| %>
+      <p>
+        <h5><%=link_to cas.title, cas%>:</h5>
+        <b><%=cas.collected_perc%>%</b> Raised <b>|</b> Loan: <b><%= cas.total_money%></b> LE <b>|</b> <b><%= cas.likers.count%></b> Likers <b>|</b> <b><%= cas.loans.count%></b>  Doners.
+        <br>
+        <i>Created At: <%=cas.created_at.to_date%></i></p>
+        <br>
+      </p>
+      <% end %> 
+    <% end %>
+  </div>
+
+
+  </div>
+  <!-- Carousel nav -->
+  <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+  <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+</div>
+
+
+  <div class="span6">
+    <iframe width="560" height="315" src="http://www.youtube.com/embed/RGYA0aRBUWA" frameborder="0" allowfullscreen></iframe>  
+  </div>
+</div>
+
+</br>

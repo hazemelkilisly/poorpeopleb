@@ -1,0 +1,71 @@
+<% content_for :title do %>
+  <title>Poor People Bank - Suspended Cases</title>
+<% end %>
+<div class="row">
+  <div class="span12">
+
+  <h3 align="center">Cases</h3>
+  <ul class="nav nav-tabs">
+    <li><%= link_to 'All Cases', admin_cases_path%></li>
+    <li class="active"><a>Suspended Cases</a></li>
+  </ul>
+
+<% if @admin_cases.size > 0 %>
+    <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Project</th>
+            <th>Borrowers</th>
+            <th>Type</th>
+            <th># Loan</th>
+            <th>Collected %</th>
+            <th># Loans</th>
+            <th># Likers</th>
+            <th>Starting Date</th>
+            <th>Experienced Borrower</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+            <% @admin_cases.each do |cas| %>
+              <tr>
+                <td><%=cas.title%></td>
+                <td>
+                  <% cas.owners.each do |owner| %>
+                    <%="#{owner.name}, "%>
+                  <% end %>
+                </td>
+                <td><%=cas.type%></td>
+                <td><%=cas.total_money%></td>
+                <td><%=cas.collected_perc%> %</td>
+                <td><%=cas.loans.count%></td>
+                <td><%=cas.likers.count%></td>
+                <td><%=cas.starting_date.to_date%></td>
+                <td><%=cas.experienced_owner%></td>
+                <td>
+                  <button class="btn" onclick= <%="showhide('#{cas.id.to_s}')"%> > Show/Hide</button>
+                <%= link_to 'Unsuspend', desuspend_admin_case_path(cas),:class=>"btn", method: :post, data: { confirm: 'Are you sure?' } %>
+                </td>
+              </tr>
+
+              <tr colspan="12" id=<%="#{cas.id.to_s}"%> style="display:none;" class="collabsing">
+                <td colspan="12">
+                    <h4>Address</h4>
+                    <p><%="#{cas.address}, #{cas.subdivision}, #{cas.governorate}."%></p>
+                    <h4>Description</h4>
+                    <p><%=cas.description%></p>
+                    <h4>Reason</h4>
+                    <p><%=cas.reason%></p>
+                </td>
+              </tr>
+            <% end %>
+        </tbody>
+    </table>
+  </div>
+  <% else %>
+    <div class="well">
+      <h3>There are no Suspended Cases..</h3>
+    </div>
+  <% end %>
+</div>
+

@@ -1,0 +1,45 @@
+
+<% content_for :title do %>
+  <title>Poor People Bank - Lend <%=@case.title %></title>
+<% end %>
+
+<div class="row">
+  <div class="span5">
+    <div class="well">
+      <h3>Lend Case <%=@case.title%>:</h3>
+      <%= form_for(:loan, :url => lender_case_path(@case), :html => { :method => "post" }) do |f| %>
+        Quantity:
+        <br>
+        <%= f.text_field :quantity,:class=>"input-xlarge", :placeholder=>"Quantity"%>
+        <br>
+        <h3>Address:</h3>
+        <br>
+        City:
+        <br>
+        <%= f.text_field :city,:class=>"input-xlarge", :placeholder=>"City"%>
+        <br>
+        Destrict:
+        <br>
+        <%= f.text_field :destrict,:class=>"input-xlarge", :placeholder=>"Destrict"%>
+        <br>
+        Address:
+        <br>
+        <%= f.text_field :address,:class=>"input-xlarge", :placeholder=>"Address"%>
+        <br>             
+        Comments:
+        <br>
+        <%= f.text_field :comments,:class=>"input-xlarge", :placeholder=>"Comments"%>
+        <br>
+        Type of Loan:
+        <br>
+          <%= f.radio_button(:donation, :true) %>Donation
+          |
+          <%= f.radio_button(:donation, :false) %>Repayable Loan
+        <br>
+
+        <%= f.submit "Lend", :class=>"btn" %>
+      <%end%>
+    </div>
+    <%= link_to 'Back', cases_path, :class=>"btn" %>
+  </div>
+</div><!--/row-->

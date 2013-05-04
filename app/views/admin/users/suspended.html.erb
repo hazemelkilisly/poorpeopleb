@@ -1,0 +1,48 @@
+<% content_for :title do %>
+  <title>Poor People Bank - Suspended Users</title>
+<% end %>
+<div class="row">
+  <div class="span12">
+  <h3 align="center">Users</h3>
+  <ul class="nav nav-tabs">
+    <li><%= link_to 'All Users', admin_users_path%></li>
+    <li class="active"><a>Suspended Users</a></li>
+  </ul>
+<% if @admin_users.size > 0 %>
+    <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Location</th>
+            <th>Entity</th>
+            <th># Loans</th>
+            <th># Likes</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @admin_users.each do |user| %>
+            <tr>
+              <td><%=user.name%></td>
+              <td><%=user.phone%></td>
+              <td><%=user.email%></td>
+              <td><%=user.location%> %</td>
+              <td><%=user.entity%></td>
+              <td><%=user.loans.count%></td>
+              <td><%=user.liked_cases.count%></td>
+              <td>
+                <%= link_to 'Unsuspend', desuspend_admin_user_path(user),:class=>"btn", method: :post, data: { confirm: 'Are you sure?' } %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+    </table>
+  </div>
+  <% else %>
+    <div class="well">
+      <h3>There are no Suspended Users..</h3>
+    </div>
+  <% end %>
+</div>

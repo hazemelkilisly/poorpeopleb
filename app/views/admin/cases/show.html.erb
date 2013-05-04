@@ -1,0 +1,203 @@
+      <div class="container">
+          <div class="wrapper">
+
+            <div class="well">
+              <div class="row">
+                <div class="span6">
+
+                <div id="myCarousel" class="carousel slide span5">
+                  <ol class="carousel-indicators">
+                    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#myCarousel" data-slide-to="1"></li>
+                    <li data-target="#myCarousel" data-slide-to="2"></li>
+                  </ol>
+                  <!-- Carousel items -->
+                  <div class="carousel-inner" style="background-image: url('/images/wild_oliva_dark.png'); border: 5px solid black;">
+
+                  <div class="active item span4" style="height:350px;">
+                 <img src="/images/avatar.png" alt="" style="display:block;margin:auto;">
+                  </div>
+
+                  <div class="item span4" style="height:350px;">
+                 <img src="/images/product.png" alt="" style="display:block;margin:auto;">
+                  </div>
+
+                  <div class="item span4" style="height:350px;">
+                 <img src="/images/product.png" alt="" style="display:block;margin:auto;">
+                  </div>
+
+                  </div>
+                  <!-- Carousel nav -->
+                  <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+                  <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+                </div>
+
+                </div>
+                <div class="span5">
+                  <h1 align="center"><b><%=@case.title%></b></h1>
+                  <h5 align="center"><i class="icon icon-heart"></i> <%=@case.likers.count%> Likers
+                    <i class="icon  icon-shopping-cart"></i> <%=@case.loans.count%>  Doners</h5>
+                    <hr>
+                    <h3 align="center"> Loan: <%=@case.total_money%> LE</h3>
+                    <h4 align="center"><i class="icon icon-calendar"></i> <%= @case.inst_months%> Months Repayment</h4>
+
+                    <div class="form-inline"><h4 align="center"><b><%=@case.collected_perc%>%</b> Raised</h4></div>
+                    <div class="progress progress-striped">
+                      <div class="bar" style=<%="width:#{@case.collected_perc.to_s}%;"%>></div>
+                    </div>
+                    <hr>
+                    <p><%= @case.description%></p>
+                    <hr>
+                    <h4>Loan By: 
+                      <%@case.owners.each do |owner| %>
+                        <a href="#"><%=owner.name%></a>
+                      <% end %>
+                    </h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="container">
+            <div class="well">
+              <div class="row">
+           <div class="span9">
+            <div class="tabbable"> <!-- Only required for left/right tabs -->
+              <ul class="nav nav-tabs" >
+                <li class="active"><a href="#payment" data-toggle="tab">Payment Schedule</a></li>
+                <li><a href="#doners" data-toggle="tab">Doners <%= @case.loans.count%></a></li>
+              </ul>
+              <div class="tab-content">
+                <div class="tab-pane active" id="payment">
+
+
+    <!-- Button to trigger modal -->
+    <a href="#myModal" role="button" class="btn pull-right" data-toggle="modal"><i class="icon icon-plus"></i> Paid Installment</a>
+     
+    <!-- Modal -->
+    <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top: -5%;">
+      <div class="modal-header">
+
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Add New Paid Installment</h3>
+
+      </div>ـ
+      <div class="modal-body">
+      <%= form_for([:admin,@installment], :url => add_installment_admin_case_path, :html => { :method => "post" }) do |f| %>
+      
+        <% if @installment.errors.any? %>
+          <div id="error_explanation">
+            <h2><%= pluralize(@installment.errors.count, "error") %> prohibited these changes from being Saved:</h2>
+
+            <ul>
+            <% @installment.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <br>
+        <h5>Payment Date: </h5>
+          <%= radio_button_tag :default_date, true, false, :onClick=>"inst_hide('toglable1');", :checked => true %> On Due Date(<%= @case.inst_timing(@case.current_inst).strftime("%B %e, %Y")%>)
+          <br>
+          <%= radio_button_tag :default_date, false, false, :onClick=>"inst_show('toglable1');" %> Another Date
+            
+          <div id="toglable1" style="display:none;">
+            <%= text_field_tag :payment_date,nil,:class => 'datepicker'%>
+          </div>
+          
+        <h5>Installment Quantity:</h5>
+          <%= radio_button_tag :default_inst, true, false, :onClick=>"inst_hide('toglable2');", :checked => true %> Default Quantity(<%= @case.inst_value%> LE)
+          <br>
+          <%= radio_button_tag :default_inst, false, false, :onClick=>"inst_show('toglable2');" %> Less Quantity
+            <div id="toglable2" style="display:none;">
+                <%= text_field_tag :quantity, nil, :placeholder=>"quantity in LE"%>
+              <br>
+              <h5>How to handle the difference?</h5>
+              <%= radio_button_tag :extra_inst, true, false %> Add Extra Installment.
+              <br>
+              <%= radio_button_tag :extra_inst, false, false, :checked=>'checked' %> Distribute the Difference on the rest on the Installments.
+              <br>
+            </div>
+
+      </div>
+      <div class="modal-footer">
+
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        <%= f.submit "Submit", :class=>"btn pull-right" %>
+
+      </div>
+      <% end %>
+    </div>
+
+                  <h3>Total Installments: <%= @case.total_insts %></h3>
+                  <h3>Remaining Installments: <%= @case.remaining_insts %></h3>
+                  <div id="schedule">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th> # </th>
+                          <th>Due Date</th>
+                          <th>Repayment</th>
+                          <th>Status</th>
+                          <th>Paid At</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+
+                        <% for i in 1..@case.total_insts %>
+                          <tr>
+                            <th><%= "##{i}" %></th>
+                            <td><%=@case.inst_timing(i).strftime("%B %e, %Y")%></td>
+                            <td><%=@case.inst_val(i)%></td>
+                            <% sts = @case.inst_status(i) %>
+                            <% if sts == 'not_due' %>
+                              <td colspan="2">Not Due Yet</td>
+<!--                               <td>Not Due Yet</td>
+ -->                            <% elsif sts == 'due' %>
+                              <td colspan="2">Due But Not Paid Yet</td>
+<!--                               <td>Due But Not Paid Yet</td>
+ -->                           <% else %>
+                              <td>Paid</td>
+                              <td><%=sts%></td>
+                            <% end %>
+                          </tr>
+                        <% end %>
+
+                      </tbody>
+                    </table>
+
+                  </div>
+                </div>
+                
+
+                <div class="tab-pane" id="doners"> 
+                <% if @case.loans.count > 0 %>
+                  <% @case.loans.each do |loan| %>
+                      <div class="span2" style="margin-left:7px;">
+                        <ul class="thumbnails">
+                          <li class="span2">
+                            <div class="wrapper">
+                              <div class="thumbnail">
+                                <a href=""><img src="/images/avatar.png" alt=""></a>
+                                <div><h5><a href=""><%=loan.user.name %></a></h5></div>
+                                <h5><i class="icon icon-money"></i>Donated: <b><%=loan.quantity%></b>LE</h5>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                  <%end%>
+                  <% else %>
+                  <div class="well">
+                    <h3> There are Currently No Doners to this Case!</h3>
+                  </div>
+                  <% end %>
+              </div>
+
+            </div>
+            </div> <!-- end tabbable -->
+        </div>
+</div></div></div>
