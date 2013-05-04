@@ -1,3 +1,7 @@
+<% content_for :title do %>
+  <title>Poor People Bank - <%=@case.title%></title>
+<% end %>
+
       <div class="container">
           <div class="wrapper">
 
@@ -39,7 +43,7 @@
                     <i class="icon  icon-shopping-cart"></i> <%=@case.loans.count%>  Doners</h5>
                     <hr>
                     <h3 align="center"> Loan: <%=@case.total_money%> LE</h3>
-                    <h4 align="center"><i class="icon icon-calendar"></i> <%= @case.inst_months%> Months Repayment</h4>
+                    <h4 align="center"><i class="icon icon-calendar"></i> <%=@case.inst_months%> Months Repayment + <%= @case.postponed_insts%> Postponed Installments</h4>
 
                     <div class="form-inline"><h4 align="center"><b><%=@case.collected_perc%>%</b> Raised</h4></div>
                     <div class="progress progress-striped">
@@ -66,7 +70,7 @@
             <div class="tabbable"> <!-- Only required for left/right tabs -->
               <ul class="nav nav-tabs" >
                 <li class="active"><a href="#payment" data-toggle="tab">Payment Schedule</a></li>
-                <li><a href="#doners" data-toggle="tab">Doners <%= @case.loans.count%></a></li>
+                <li><a href="#doners" data-toggle="tab">Doners <%= @case.loans.active.count%></a></li>
               </ul>
               <div class="tab-content">
                 <div class="tab-pane active" id="payment">
@@ -174,8 +178,8 @@
                 
 
                 <div class="tab-pane" id="doners"> 
-                <% if @case.loans.count > 0 %>
-                  <% @case.loans.each do |loan| %>
+                <% if @case.loans.active.count > 0 %>
+                  <% @case.loans.active.each do |loan| %>
                       <div class="span2" style="margin-left:7px;">
                         <ul class="thumbnails">
                           <li class="span2">
