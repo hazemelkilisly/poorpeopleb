@@ -1,118 +1,141 @@
 <style media="screen" type="text/css">
 @media (min-width: 980px) {
-    .main{padding-top: 110px;}
+.main{padding-top: 90px;}
 }
 </style>
 <% content_for :title do %>
-  <title>Poor People Bank - Cases</title>
+<title>Poor People Bank - Cases</title>
 <% end %>
 </style>
-  <% if params[:q] || params[:min_time] || params[:max_time] || params[:sort]%>
-    <%= link_to "Reset Search", cases_url, :class=>"btn pull-right"%>
-  <% end %>
+<div class="span12">
+<div class="tabbable"> <!-- Only required for left/right tabs -->
+<ul class="nav nav-tabs" >
+<li class="active"><a href="#all" data-toggle="tab">All Cases</a></li>
+<li><a href="#recomended" data-toggle="tab">Recomended Cases</a></li>
+</ul>
+<div class="tab-content">
+<div class="tab-pane active" id="all">
+<% if params[:q] || params[:min_time] || params[:max_time] || params[:sort]%>
+<%= link_to "Reset Search", cases_url, :class=>"btn pull-right"%>
+<% end %>
 <%if @cases.size > 0 %>
-
 <%if @cases[0].size > 0 %>
-
-  <div class="row">
-  <div class="span3">
-  <form class="form-search">
-    <div class="input-append">
-      <%= form_tag cases_path, :authenticity_token => false do%>
-        <%= text_field_tag :q, nil,:value=>params[:q], :class=>"span2 search-query"%>
-        <%= submit_tag "Search", :class=>"btn", :style=>'style="padding:5px 13px;'%>
-      <%end%>
-    </div>
-  </form>
-  <ul class="nav nav-tabs nav-stacked" style="background-color:whitesmoke;">
-
-  <li class="active" onClick="$('#sorting').slideToggle();"><a><i class="icon-th-large"></i> Sort By</a></li>
-
+<div class="row">
+<div class="span3">
+<form class="form-search">
+<div class="input-append">
+<%= form_tag cases_path, :authenticity_token => false do%>
+<%= text_field_tag :q, nil,:value=>params[:q], :class=>"span2 search-query"%>
+<%= submit_tag "Search", :class=>"btn", :style=>'style="padding:5px 13px;'%>
+<%end%>
+</div>
+</form>
+<ul class="nav nav-tabs nav-stacked" style="background-color:whitesmoke;">
+<li class="active" onClick="$('#sorting').slideToggle();"><a><i class="icon-th-large"></i> Sort By</a></li>
 <div class="nav nav-tabs nav-stacked" id="sorting" style="display:none;margin-bottom: 0px;">
-
-    <li><%= link_to '<i class="icon-star-empty"></i> Newest'.html_safe, cases_url(:sort => 'newest',:q =>params[:q],:min_time =>params[:min_time],:max_time =>params[:max_time]) %></li>
-
-
-    <li><%= link_to '<i class="icon-heart"></i> Popular'.html_safe, cases_url(:sort => 'popular',:q =>params[:q],:min_time =>params[:min_time],:max_time =>params[:max_time]) %></li>
-
-
-    <li><%= link_to '<i class="icon-shopping-cart"></i> Most Lended'.html_safe, cases_url(:sort => 'most_lended',:q =>params[:q],:min_time =>params[:min_time],:max_time =>params[:max_time]) %></li>
-
-
-    <li><%= link_to '<i class="icon-tasks"></i> Almost Collected'.html_safe, cases_url(:sort => 'almost_collected',:q =>params[:q],:min_time =>params[:min_time],:max_time =>params[:max_time]) %></li>
+<li><%= link_to '<i class="icon-star-empty"></i> Newest'.html_safe, cases_url(:sort => 'newest',:q =>params[:q],:min_time =>params[:min_time],:max_time =>params[:max_time]) %></li>
+<li><%= link_to '<i class="icon-heart"></i> Popular'.html_safe, cases_url(:sort => 'popular',:q =>params[:q],:min_time =>params[:min_time],:max_time =>params[:max_time]) %></li>
+<li><%= link_to '<i class="icon-shopping-cart"></i> Most Lended'.html_safe, cases_url(:sort => 'most_lended',:q =>params[:q],:min_time =>params[:min_time],:max_time =>params[:max_time]) %></li>
+<li><%= link_to '<i class="icon-tasks"></i> Almost Collected'.html_safe, cases_url(:sort => 'almost_collected',:q =>params[:q],:min_time =>params[:min_time],:max_time =>params[:max_time]) %></li>
 </div>
-<!-- 
-  <li class="active" onClick="$('#categories').slideToggle();"><a><i class="icon-th-list"></i> Categories</a></li>
-
-<div class="nav nav-tabs nav-stacked" id="categories" style="display:none;margin-bottom: 0px;">
-  <li><a><div style="margin-left:30px"><input type="checkbox" style="margin-right:5px;margin-top:-5px;">Electronics & Tech<br></div></a></li>
-  <li><a><div style="margin-left:30px"><input type="checkbox" style="margin-right:5px;margin-top:-5px;">For Shops<br></div></a></li>
-  <li><a><div style="margin-left:30px"><input type="checkbox" style="margin-right:5px;margin-top:-5px;">Agriculture<br></div></a></li>
-</div>       
-
-  <li class="active" onClick="$('#gender').slideToggle();"><a><i class="icon-user"></i> Gender</a></li>
-
-<div class="nav nav-tabs nav-stacked" id="gender" style="display:none;margin-bottom: 0px;">
-  <li><a><div style="margin-left:30px"><input type="checkbox" style="margin-right:5px;margin-top:-5px;">Male<br></div></a></li>
-  <li><a><div style="margin-left:30px"><input type="checkbox" style="margin-right:5px;margin-top:-5px;">Female<br></div></a></li>
-</div>
- -->
-  <li class="active" onClick="$('#time').slideToggle();"><a><i class="icon-calendar"></i> Repayment Time</a></li>
+<li class="active" onClick="$('#time').slideToggle();"><a><i class="icon-calendar"></i> Repayment Time</a></li>
 <div class="nav nav-tabs nav-stacked" id="time" style="display:none;margin-bottom: 0px;">
 <li><a><div style="margin-left:30px">
-      <%= form_tag cases_path, :method => :get, :authenticity_token => false do %>
-        <%= text_field_tag :min_time, nil,:value=>params[:min_time], :placeholder=>"Min", :class=>"input-mini"%><%= text_field_tag :max_time, nil,:value=>params[:max_time], :placeholder=>"Min", :class=>"input-mini"%>Months<br></div></a>
+<%= form_tag cases_path, :method => :get, :authenticity_token => false do %>
+<%= text_field_tag :min_time, nil,:value=>params[:min_time], :placeholder=>"Min", :class=>"input-mini"%><%= text_field_tag :max_time, nil,:value=>params[:max_time], :placeholder=>"Min", :class=>"input-mini"%>Months<br></div></a>
 </li>
 </div>
-  </ul>
-  <div class="nav-headers pull-right" style="margin-top:-20px;">
-  <%= submit_tag "Filer", :class=>'btn'%>
-  <%end%>
-  </div>
-  </div>
-
+</ul>
+<div class="nav-headers pull-right" style="margin-top:-20px;">
+<%= submit_tag "Filer", :class=>'btn'%>
+<%end%>
+</div>
+</div>
 <div class="span9" id="products">
-
 <!--stack 1-->
 <div class="span3" style="margin-left:13px;">
 <ul class="thumbnails">
-
 <% @cases[0].each do |pro| %>
-  <%= render "shared/singlecase", :pro => pro, :shareperc => nil %>
+<%= render "shared/singlecase", :pro => pro, :shareperc => nil %>
 <% end %>
 </ul>
 </div>
-
 <!--stack 2-->
 <div class="span3" style="margin-left:13px;">
 <ul class="thumbnails">
-
 <% @cases[1].each do |pro| %>
-  <%= render "shared/singlecase", :pro => pro, :shareperc => nil %>
+<%= render "shared/singlecase", :pro => pro, :shareperc => nil %>
 <% end %>
-
-</ul></div>
-
+</ul>
+</div>
 <!--stack 3-->
 <div class="span3" style="margin-left:13px;">
 <ul class="thumbnails">
-
 <% @cases[2].each do |pro| %>
-  <%= render "shared/singlecase", :pro => pro, :shareperc => nil %>
+<%= render "shared/singlecase", :pro => pro, :shareperc => nil %>
 <% end %>
-
 </ul>
 </div>
-
 </div>
 <%end%>
 <%else%>
-  <h2><span>Cases</span></h2>
-    <div class = "well" %>
-      <% if params[:q] || params[:min_time] || params[:max_time] %>
-        <p>Couldn't find any results for <%=params[:q]%></p>
-      <% else %>
-        <p>There are No Cases Yet.</p>
-      <% end %>
-    </div>
+<h2><span>Cases</span></h2>
+<div class = "well" %>
+<% if params[:q] || params[:min_time] || params[:max_time] %>
+<p>Couldn't find any results for <%=params[:q]%></p>
+<% else %>
+<p>There are No Cases Yet.</p>
+<% end %>
+</div>
 <%end%>
+</div>
+</div>
+<div class="tab-pane" id="recomended"> 
+<%if @recomended_cases.size > 0 %>
+<%if @recomended_cases[0].size > 0 %>
+<div class="row">
+<div class="span12">
+<!--stack 1-->
+<div class="span3" style="margin-left:13px;">
+<ul class="thumbnails">
+<% @recomended_cases[0].each do |pro| %>
+<%= render "shared/singlecase", :pro => pro, :shareperc => nil %>
+<% end %>
+</ul>
+</div>
+<!--stack 2-->
+<div class="span3" style="margin-left:13px;">
+<ul class="thumbnails">
+<% @recomended_cases[1].each do |pro| %>
+<%= render "shared/singlecase", :pro => pro, :shareperc => nil %>
+<% end %>
+</ul>
+</div>
+<!--stack 3-->
+<div class="span3" style="margin-left:13px;">
+<ul class="thumbnails">
+<% @recomended_cases[2].each do |pro| %>
+<%= render "shared/singlecase", :pro => pro, :shareperc => nil %>
+<% end %>
+</ul>
+</div>
+<!--stack 4-->
+<div class="span3" style="margin-left:13px;">
+<ul class="thumbnails">
+<% @recomended_cases[3].each do |pro| %>
+<%= render "shared/singlecase", :pro => pro, :shareperc => nil %>
+<% end %>
+</ul>
+</div>
+</div>
+<%end%>
+<%else%>
+<h2><span>RecomendedCases</span></h2>
+<div class = "well" %>
+<p>There are No Cases Yet.</p>
+</div>
+<%end%>
+</div>
+</div>
+</div> <!-- end tabbable -->
+</div>

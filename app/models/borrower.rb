@@ -15,6 +15,7 @@ class Borrower
   field :address, :type => String
     # validates_presence_of :address1, :message => "should be entered!"
 
+  field :rating, :type =>Integer
 
   field :age, :type => Integer
     # validates_presence_of :age, :message => "should be entered!"
@@ -23,9 +24,9 @@ class Borrower
   field :marital_status, :type => String
     # validates_presence_of :marital_status, :message => "should be entered!"
   field :childen_num, :type => Integer, :default => 0
-    validates_presence_of :childen_num, :message => "should be entered!"
+    # validates_presence_of :childen_num, :message => "should be entered!"
   field :dependencies_num, :type => Integer, :default => 0
-    validates_presence_of :dependencies_num, :message => "should be entered!"
+    # validates_presence_of :dependencies_num, :message => "should be entered!"
   field :dependencies_description, :type => String
     # validates_presence_of :dependencies_description, :message => "should be entered!"
   field :monthly_income, :type => Integer

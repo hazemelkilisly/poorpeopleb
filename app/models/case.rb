@@ -1,6 +1,7 @@
 class Case
   include Mongoid::Document
   include Mongoid::Timestamps
+  after_create :link_tags
 
   field :title, :type => String
   validates_presence_of :title, :message => "should be entered!"
@@ -35,15 +36,23 @@ class Case
   field :inst_months, :type => Integer
     validates_presence_of :inst_months, :message => "should be entered!"
 
-  field :postponed_insts, :type => Integer, :default=>0
+  field :postponed_insts, :type => Integer, :default => 0
 
   field :suspended, :type => Boolean, :default => false
+  
+  field :rating, :type =>Integer
 
   scope :active, where(:suspended => false)
 
   scope :suspends, where(:suspended => true)
 
-  has_many :loans
+  has_many :loans do
+    def loaned_by(user)
+      where(:user.ne => user).exists?
+    end
+  end
+
+  has_and_belongs_to_many :tags
 
   belongs_to :creator, class_name: 'Admin', inverse_of: :created_cases
 
@@ -52,6 +61,26 @@ class Case
   has_many :installments
   
   has_and_belongs_to_many :likers, class_name: "User", inverse_of: :liked_cases
+
+  scope :recomendable,->(user){ where(:liker_ids.ne => user.id, :suspended => false) }
+
+  def user_tag_points(user)
+    sum = 0
+    tags.each do |tag|
+      sum += tag.user_likes(user)
+    end
+    sum
+  end
+
+  def remove_tag(tag)
+    tg = Tag.where(:word => tag).first
+    tags.delete(tg) if tg
+  end
+
+  def self.get_user_recomendations(user)
+    self.recomendable(user).sort {|a,b| b.user_tag_points(user) <=> a.user_tag_points(user)}.take(10)
+    # select { |r| r.user_tag_points(user) > 0 }
+  end
 
   #Returns the ammout paid back by borrower
   def paid_back
@@ -123,15 +152,15 @@ class Case
 
   #Returns if installent "num" payment status ('due','not_due', payment_date)
   def inst_status(num)
-    if inst_timing(num) > DateTime.now
-      'not_due'
-    else
       if num <= installments.count
         installments.where(:number => num).first.payment_date.strftime("%B %e, %Y")
       else
-        'due'
-      end  
-    end
+        if inst_timing(num) > DateTime.now
+          'not_due'
+        else
+          'due'
+        end  
+      end
   end
 
   #Returns the time that current installment is late/early with
@@ -141,5 +170,12 @@ class Case
     (pay_date - real_due_date).to_i
   end
 
-
+  private
+    def link_tags
+      stop_words = StopWord.in_list
+      title_tags = title.filter_tags(stop_words)
+      description_tags = description.filter_tags(stop_words)
+      all_tags = (title_tags + description_tags).uniq
+      Tag.create_from_array(all_tags,self.id)
+    end
 end

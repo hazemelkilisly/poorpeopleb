@@ -130,7 +130,7 @@
         <tbody>
           <% @admin_borrowers.each do |borrower| %>
             <tr>
-              <td><%=borrower.name%></td>
+              <td><%=link_to borrower.name, borrower_path(borrower)%></td>
               <td><%=borrower.phone%></td>
               <td><%=borrower.job%></td>
               <td><%=borrower.marital_status%> %</td>

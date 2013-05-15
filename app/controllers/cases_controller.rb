@@ -32,6 +32,8 @@ class CasesController < ApplicationController
       end
     end
     @cases = cas.in_columns(3)
+
+    @recomended_cases = Case.get_user_recomendations(current_user).in_columns(4) if current_user
   end
 
   # GET /cases/1
@@ -49,11 +51,21 @@ class CasesController < ApplicationController
 
   def lender
     @case = Case.find(params[:id])
+    @case.likers << current_user
     # loans = Loan.where(:user => current_user, :case => @case, :collected => false)
     loan = Loan.create(params[:loan])
     loan.user = current_user
     loan.case = @case
     loan.save
+    @case.tags.each do |tag|
+      if TagLike.where(:tag => tag, :liker => current_user).exists?
+        tg = TagLike.where(:tag => tag, :liker => current_user).first
+        tg.total_likes+=1 
+        tg.save
+      else
+        TagLike.create(:tag => tag,:liker => current_user)
+      end
+    end
     if @case.save
       redirect_to @case, notice: 'You\'ve successfully lended '+ @case.title
     else
@@ -63,8 +75,18 @@ class CasesController < ApplicationController
 
   def like
     @case = Case.find(params[:id])
-    @case.liker_ids << current_user.id
+    @case.likers << current_user
     @case.save
+    @case.tags.each do |tag|
+      if TagLike.where(:tag => tag, :liker => current_user).exists?
+        tg = TagLike.where(:tag => tag, :liker => current_user).first
+        tg.total_likes+=1 
+        tg.save
+      else
+        TagLike.create(:tag => tag,:liker => current_user)
+      end
+    end
+
     if @case.save
       redirect_to @case, notice: 'You\'ve successfully Liked '+ @case.title
     else
@@ -74,6 +96,13 @@ class CasesController < ApplicationController
   
   def unlike
     @case = Case.find(params[:id])
+    @case.tags.each do |tag|
+      if TagLike.where(:tag => tag, :liker => current_user).exists?
+        tg = TagLike.where(:tag => tag, :liker => current_user).first
+        tg.total_likes-=1 
+        tg.save
+      end
+    end
     @case.likers.delete(current_user)
     redirect_to @case, notice: 'You\'ve unLiked '+ @case.title
   end

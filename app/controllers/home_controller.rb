@@ -5,9 +5,9 @@ class HomeController < ApplicationController
 			@twitter_feeds = nil
 		else
 			if(twitter_feeds.entries.count >= 3)
-				@twitter_feeds = twitter_feeds.entries.sort {|a,b| a.published <=> b.published}.take(3)
+				@twitter_feeds = twitter_feeds.entries.sort {|a,b| b.published <=> a.published}.take(3)
 			else
-				@twitter_feeds = twitter_feeds.entries.sort {|a,b| a.published <=> b.published}
+				@twitter_feeds = twitter_feeds.entries.sort {|a,b| b.published <=> a.published}
 			end
 		end
 		@most_given_cases = Case.all.sort {|a,b| b.loans.count <=> a.loans.count}.take(3)

@@ -46,6 +46,9 @@ Poorpeoplebank::Application.routes.draw do
         post :desuspend
         post :add_installment
         get :installment
+        post :add_tags
+        post :remove_tag
+        post :to_stop_word
       end
     end
     resources :loans, only: [:index,:destroy]
@@ -72,6 +75,7 @@ Poorpeoplebank::Application.routes.draw do
       post :withdraw
     end
   end
+  resources :borrowers, only: [:show]
 
   # devise_for :users
 

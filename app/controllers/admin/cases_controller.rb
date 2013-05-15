@@ -90,7 +90,29 @@ class Admin::CasesController < ApplicationController
     else
       redirect_to admin_cases_path, :alert => "Unsuccessful creation of installment, please try again! \n You must enter Quantity and choose Payment Date."
     end
-    
+  end
+
+  def add_tags
+    @case = Case.find(params[:id])
+    tags_string = params[:tags]
+    stop_words = StopWord.in_list
+    all_tags = tags_string.filter_tags(stop_words).uniq
+    Tag.create_from_array(all_tags,@case.id)
+    redirect_to admin_case_path(@case), :notice => "Successfully linked tags to this case."
+  end
+
+  def remove_tag
+    @case = Case.find(params[:id])
+    tag = params[:tag]
+    @case.remove_tag(tag)
+    redirect_to admin_case_path(@case), :notice => "Successfully unlinked tag to this case."
+  end
+
+  def to_stop_word
+    @case = Case.find(params[:id])
+    tag = params[:tag]
+    Tag.to_stop_word(tag)
+    redirect_to admin_case_path(@case), :notice => "Successfully changes this tag to stop-word."
   end
 
 end

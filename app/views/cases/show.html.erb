@@ -73,7 +73,7 @@
                     <hr>
                     <h4>Loan By: 
                       <%@case.owners.each do |owner| %>
-                        <a href="#"><%=owner.name%></a>
+                        <%=link_to owner.name, borrower_path(owner)%>
                       <% end %>
                     </h4>
                   </div>

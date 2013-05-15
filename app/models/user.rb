@@ -33,7 +33,10 @@ class User
   field :locale, :type => String, :default => 'en'
 
   has_many :loans
+  
   has_and_belongs_to_many :liked_cases, class_name: "Case", inverse_of: :likers
+
+  has_many :liked_tags, class_name: "TagLike", inverse_of: :liker
 
   has_many :paybacks, class_name: 'PayBack', inverse_of: :paid_to
   # Include default devise modules. Others available are:

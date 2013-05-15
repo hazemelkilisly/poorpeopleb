@@ -54,9 +54,33 @@
                     <hr>
                     <h4>Loan By: 
                       <%@case.owners.each do |owner| %>
-                        <a href="#"><%=owner.name%></a>
+                        <%=link_to owner.name, borrower_path(owner)%>
                       <% end %>
                     </h4>
+                  </div>
+                </div>
+
+                <div class="well">
+                  <h4>Tags:
+                    <button class="btn" onClick="$('#adding_tags').slideToggle();"><i class="icon icon-plus"></i> Add More</button>
+                  </h4>
+
+                  <div style="display:none;" id="adding_tags">
+                    <%= form_tag(add_tags_admin_case_path(@case), :html => { :method => :post }) do%>
+                      <%= text_field_tag :tags, nil,:placeholder=>"Enter Tags Separated by Spaces.", :class=>"span6 input-large"%>
+                      <%= submit_tag "Add", :class=>"btn", :style=>'style="padding:5px 13px;'%>
+                    <%end%>
+                  </div>
+                  <div class="row" style="margin-left:30px;">
+                    <% @case.tags.each do |tag| %>
+                      <div class="thumbnail span2" style="margin-left:2px;width:130px;height:30px;">
+                        <h6>
+                          <%=tag.word%>
+                          <%= link_to 'x', remove_tag_admin_case_path(@case,:tag => tag.word), method: :post, :class=>'btn','data-toggle' =>"tooltip", 'title'=>"", 'data-original-title'=>"Remove Tag from this Case"%>
+                          <%= link_to 's', to_stop_word_admin_case_path(@case,:tag => tag.word), method: :post, :class=>'btn','data-toggle'=>"tooltip", 'title'=>"", 'data-original-title'=>"Make a Stop Word"%>
+                        </h6>
+                      </div>
+                    <%end%>
                   </div>
                 </div>
               </div>

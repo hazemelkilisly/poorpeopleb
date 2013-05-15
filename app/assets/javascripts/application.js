@@ -51,4 +51,7 @@ function inst_show(x) {
     $('#'+x).slideDown();
 }
 
-$(document).ready(function() { jQuery('.datepicker').datepicker({format: 'dd-mm-yyyy', autoclose: true});});
+$(document).ready(function() { 
+  jQuery('.datepicker').datepicker({format: 'dd-mm-yyyy', autoclose: true});
+  jQuery('.btn').tooltip();
+});

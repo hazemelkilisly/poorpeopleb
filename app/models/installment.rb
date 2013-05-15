@@ -6,6 +6,7 @@ class Installment
   field :payment_date, :type =>DateTime
   field :days_diff, :type =>Integer
   field :number, :type =>Integer
+  field :rating, :type =>Integer
 
 
   belongs_to :case
