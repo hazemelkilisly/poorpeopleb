@@ -1,0 +1,97 @@
+<% content_for :title do %>
+  <title>Poor People Bank - <%=@borrower.name%></title>
+<% end %>
+      <div class="well">
+        <div class="members-wraper">
+          <div class="member-holder active">
+            <img class="img-circle" style="width:265px;height:265px;" src="/./images/avatar.png" alt="member">
+            <div class="member-info-wraper">
+              <header class="pull-left">
+                <h3><%= @borrower.name %>
+                </h3>
+              </header>
+
+              <div class="clearfix"></div>
+
+              <div class="span3">
+                <div class="span3"><h4 class="section-header" style="margin-bottom:-1px;"><i class="icon-shopping-cart icon-large"></i>Phone <b><%= @borrower.phone %></b></h4></div>
+                <div class="span3"><h4 class="section-header" style="margin-bottom:-1px;"><i class="icon-shopping-cart icon-large"></i>Age<b><%= @borrower.age %></b></h4></div>
+                <div class="span3"><h4 class="section-header" style="margin-bottom:-1px;"><i class="icon-shopping-cart icon-large"></i>Income <b><%= @borrower.monthly_income %></b></h4></div>
+              </div>
+
+              <div class="span3">
+                <div class="span3"><h4 class="section-header" style="margin-bottom:-1px;"><i class="icon-shopping-cart icon-large"></i>Dependencies <b><%= @borrower.dependencies_num %></b></h4></div>
+                <div class="span3"><h4 class="section-header" style="margin-bottom:-1px;"><i class="icon-shopping-cart icon-large"></i><b><%= @borrower.marital_status %></b></h4></div>
+                <div class="span3"><h4 class="section-header" style="margin-bottom:-1px;"><i class="icon-shopping-cart icon-large"></i>Children <b><%= @borrower.childen_num %></b></h4></div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <hr>
+
+<div class="row">
+<div class="span12">
+<% @loans = @borrower.owned_cases.in_columns(4) %>
+
+<div class="tabbable"> <!-- Only required for left/right tabs -->
+<ul class="nav nav-pills" style="margin-left:15px;">
+<li class="active"><a href="#loans" data-toggle="tab">Loans <%= @borrower.owned_cases.count%></a></li>
+</ul>
+<div class="tab-content">
+
+<div class="tab-pane active" id="loans">
+
+
+<%if @loans.size > 0 && @loans[0].size > 0 %>
+<div class="span3" style="margin-left:13px;">
+<ul class="thumbnails">
+
+<% @loans[0].each do |pro| %>
+  <%= render "shared/singlecase", :pro => pro.case, :shareperc => pro.quantity %>
+<% end %>
+</ul>
+</div>
+<div class="span3" style="margin-left:13px;">
+<ul class="thumbnails">
+
+<% @loans[1].each do |pro| %>
+  <%= render "shared/singlecase", :pro => pro.case, :shareperc => pro.quantity %>
+<% end %>
+</ul>
+</div>
+<div class="span3" style="margin-left:13px;">
+<ul class="thumbnails">
+
+<% @loans[2].each do |pro| %>
+  <%= render "shared/singlecase", :pro => pro.case, :shareperc => pro.quantity %>
+<% end %>
+</ul>
+</div>
+<div class="span3" style="margin-left:13px;">
+<ul class="thumbnails">
+
+<% @loans[3].each do |pro| %>
+  <%= render "shared/singlecase", :pro => pro.case, :shareperc => pro.quantity %>
+<% end %>
+</ul>
+</div>
+
+<%else%>
+    <div class = "well" %>
+        <p>This Borrower hasn't been attached to any Case Yet..</p>
+    </div>
+<%end%>
+
+
+</div>
+
+</div>
+</div> <!-- end tabbable -->
+
+</div>
+</div>
+
